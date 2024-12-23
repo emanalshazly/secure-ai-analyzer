@@ -1,88 +1,109 @@
-# secure-ai-analyzer
-AI-powered security analysis and risk assessment platform
 # SecureAI Analyzer 🛡️
 
-AI-powered security analysis and risk assessment platform that helps identify and mitigate cybersecurity risks quickly and efficiently.
+[English](#english) | [العربية](#arabic)
 
-## 🎯 Features
+## English
 
-- Automated security risk analysis
-- AI-powered threat detection
-- Simple and intuitive interface
-- Detailed security reports
-- Custom risk assessment
+### Overview
+SecureAI Analyzer is a web application that helps analyze the security aspects of AI systems. It provides a quick and detailed analysis of potential security risks and recommendations.
 
-## 🚀 Getting Started
+### Features
+- Quick and detailed security analysis
+- Risk categorization (High, Medium, Low)
+- Security recommendations
+- Clean and responsive user interface
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- OpenAI API key
+### Technical Stack
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- API Routes
+
+### Project Structure
+```
+secure-ai-analyzer-new/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx            # Main page
+│   │   ├── layout.tsx          # App layout
+│   │   └── api/
+│   │       └── analyze/
+│   │           └── route.ts    # Analysis API
+│   └── components/
+│       └── ui/
+│           ├── SecurityAnalysisForm.tsx
+│           └── AnalysisResults.tsx
+```
 
 ### Installation
 1. Clone the repository
-```bash
-git clone https://github.com/your-username/secure-ai-analyzer.git
-cd secure-ai-analyzer
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+### Lessons Learned
+- Working with Next.js App Router
+- Implementing API routes
+- TypeScript type safety
+- Component organization
+- Error handling
+- UI/UX considerations
+
+---
+
+## Arabic <a name="arabic"></a>
+
+### نظرة عامة
+SecureAI Analyzer هو تطبيق ويب يساعد في تحليل الجوانب الأمنية لأنظمة الذكاء الاصطناعي. يوفر تحليلاً سريعاً ومفصلاً للمخاطر الأمنية المحتملة والتوصيات.
+
+### المميزات
+- تحليل أمني سريع ومفصل
+- تصنيف المخاطر (عالية، متوسطة، منخفضة)
+- توصيات أمنية
+- واجهة مستخدم نظيفة ومتجاوبة
+
+### التقنيات المستخدمة
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- API Routes
+
+### هيكل المشروع
 ```
-
-2. Install dependencies
-```bash
-npm install
-# or
-yarn install
-```
-
-3. Set up environment variables
-```bash
-cp .env.example .env
-```
-
-4. Start the development server
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Next.js, React
-- **Styling:** Tailwind CSS
-- **Authentication:** NextAuth.js
-- **API:** OpenAI API
-- **Deployment:** Vercel/Netlify
-
-## 📋 Project Structure
-
-```
-secure-ai-analyzer/
+secure-ai-analyzer-new/
 ├── src/
-│   ├── app/          # Next.js app directory
-│   ├── components/   # React components
-│   ├── lib/          # Utility functions
-│   └── styles/       # CSS styles
-├── public/           # Static files
-├── docs/            # Documentation
-└── tests/           # Test files
+│   ├── app/
+│   │   ├── page.tsx            # الصفحة الرئيسية
+│   │   ├── layout.tsx          # هيكل التطبيق
+│   │   └── api/
+│   │       └── analyze/
+│   │           └── route.ts    # واجهة برمجة التحليل
+│   └── components/
+│       └── ui/
+│           ├── SecurityAnalysisForm.tsx
+│           └── AnalysisResults.tsx
 ```
 
-## 🤝 Contributing
+### التثبيت
+1. استنساخ المستودع
+2. تثبيت التبعيات:
+   ```bash
+   npm install
+   ```
+3. تشغيل خادم التطوير:
+   ```bash
+   npm run dev
+   ```
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Contact
-
-Your Name - [@unforgetable_un](https://x.com/unforgetable_un
-
-Project Link: https://github.com/emanalshazly/secure-ai-analyzer
+### الدروس المستفادة
+- العمل مع Next.js App Router
+- تنفيذ مسارات API
+- السلامة النوعية مع TypeScript
+- تنظيم المكونات
+- معالجة الأخطاء
+- اعتبارات واجهة المستخدم
