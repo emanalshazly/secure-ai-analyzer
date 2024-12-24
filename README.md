@@ -1,109 +1,36 @@
-# SecureAI Analyzer 🛡️
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-[English](#english) | [العربية](#arabic)
+## Getting Started
 
-## English
+First, run the development server:
 
-### Overview
-SecureAI Analyzer is a web application that helps analyze the security aspects of AI systems. It provides a quick and detailed analysis of potential security risks and recommendations.
-
-### Features
-- Quick and detailed security analysis
-- Risk categorization (High, Medium, Low)
-- Security recommendations
-- Clean and responsive user interface
-
-### Technical Stack
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- API Routes
-
-### Project Structure
-```
-secure-ai-analyzer-new/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx            # Main page
-│   │   ├── layout.tsx          # App layout
-│   │   └── api/
-│   │       └── analyze/
-│   │           └── route.ts    # Analysis API
-│   └── components/
-│       └── ui/
-│           ├── SecurityAnalysisForm.tsx
-│           └── AnalysisResults.tsx
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### Installation
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Lessons Learned
-- Working with Next.js App Router
-- Implementing API routes
-- TypeScript type safety
-- Component organization
-- Error handling
-- UI/UX considerations
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
----
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Arabic <a name="arabic"></a>
+## Learn More
 
-### نظرة عامة
-SecureAI Analyzer هو تطبيق ويب يساعد في تحليل الجوانب الأمنية لأنظمة الذكاء الاصطناعي. يوفر تحليلاً سريعاً ومفصلاً للمخاطر الأمنية المحتملة والتوصيات.
+To learn more about Next.js, take a look at the following resources:
 
-### المميزات
-- تحليل أمني سريع ومفصل
-- تصنيف المخاطر (عالية، متوسطة، منخفضة)
-- توصيات أمنية
-- واجهة مستخدم نظيفة ومتجاوبة
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-### التقنيات المستخدمة
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- API Routes
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### هيكل المشروع
-```
-secure-ai-analyzer-new/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx            # الصفحة الرئيسية
-│   │   ├── layout.tsx          # هيكل التطبيق
-│   │   └── api/
-│   │       └── analyze/
-│   │           └── route.ts    # واجهة برمجة التحليل
-│   └── components/
-│       └── ui/
-│           ├── SecurityAnalysisForm.tsx
-│           └── AnalysisResults.tsx
-```
+## Deploy on Vercel
 
-### التثبيت
-1. استنساخ المستودع
-2. تثبيت التبعيات:
-   ```bash
-   npm install
-   ```
-3. تشغيل خادم التطوير:
-   ```bash
-   npm run dev
-   ```
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-### الدروس المستفادة
-- العمل مع Next.js App Router
-- تنفيذ مسارات API
-- السلامة النوعية مع TypeScript
-- تنظيم المكونات
-- معالجة الأخطاء
-- اعتبارات واجهة المستخدم
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
