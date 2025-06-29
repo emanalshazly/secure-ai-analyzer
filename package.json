@@ -1,5 +1,5 @@
 {
-  "name": "secure-ai-analyzer-new",
+  "name": "secure-ai-analyzer-saas",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@stripe/stripe-js": "^2.4.0",
+    "lucide-react": "^0.263.1",
     "next": "15.1.2",
     "openai": "^4.77.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "stripe": "^14.15.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
