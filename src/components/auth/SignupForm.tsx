@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
 
 interface SignupFormProps {
@@ -16,7 +15,6 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const supabase = createClient()
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,18 +22,25 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          }
-        }
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, fullName }),
       })
 
-      if (error) throw error
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed')
+      }
+
       setSuccess(true)
+      // Reload the page to trigger auth check
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -52,16 +57,10 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold mb-2">Check Your Email</h2>
+          <h2 className="text-2xl font-bold mb-2">تم إنشاء الحساب بنجاح!</h2>
           <p className="text-gray-600 mb-6">
-            We've sent you a confirmation link at {email}
+            مرحباً بك في SecureAI Analyzer
           </p>
-          <button
-            onClick={onToggleMode}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
-            Back to Sign In
-          </button>
         </div>
       </div>
     )
@@ -70,7 +69,7 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">إنشاء حساب جديد</h2>
         
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4">
@@ -81,7 +80,7 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              الاسم الكامل
             </label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -90,7 +89,7 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your full name"
+                placeholder="أدخل اسمك الكامل"
                 required
               />
             </div>
@@ -98,7 +97,7 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              البريد الإلكتروني
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -107,7 +106,7 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your email"
+                placeholder="أدخل بريدك الإلكتروني"
                 required
               />
             </div>
@@ -115,7 +114,7 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              كلمة المرور
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -124,7 +123,7 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Create a password"
+                placeholder="أنشئ كلمة مرور"
                 required
                 minLength={6}
               />
@@ -143,18 +142,18 @@ export default function SignupForm({ onToggleMode }: SignupFormProps) {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            Already have an account?{' '}
+            لديك حساب بالفعل؟{' '}
             <button
               onClick={onToggleMode}
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
-              Sign in
+              تسجيل الدخول
             </button>
           </p>
         </div>

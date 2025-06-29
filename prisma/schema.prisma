@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id                   String   @id @default(cuid())
+  email                String   @unique
+  password             String
+  fullName             String?  @map("full_name")
+  avatarUrl            String?  @map("avatar_url")
+  subscriptionTier     String   @default("free") @map("subscription_tier") // free, pro, enterprise
+  subscriptionStatus   String?  @map("subscription_status") // active, canceled, past_due
+  stripeCustomerId     String?  @map("stripe_customer_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  securityAnalyses     SecurityAnalysis[]
+  usageTracking        UsageTracking[]
+
+  @@map("users")
+}
+
+model SecurityAnalysis {
+  id                String   @id @default(cuid())
+  userId            String   @map("user_id")
+  systemDescription String   @map("system_description")
+  analysisType      String   @map("analysis_type") // quick, detailed
+  result            String   // JSON string
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("security_analyses")
+}
+
+model UsageTracking {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  action    String
+  metadata  String?  // JSON string
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("usage_tracking")
+}

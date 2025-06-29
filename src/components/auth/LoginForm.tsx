@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { useAuth } from './AuthProvider'
 
 interface LoginFormProps {
   onToggleMode: () => void
@@ -14,7 +14,6 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,12 +21,22 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       })
 
-      if (error) throw error
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed')
+      }
+
+      // Reload the page to trigger auth check
+      window.location.reload()
     } catch (error: any) {
       setError(error.message)
     } finally {
@@ -38,7 +47,7 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">Welcome Back</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">مرحباً بعودتك</h2>
         
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-4">
@@ -49,7 +58,7 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              البريد الإلكتروني
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -58,7 +67,7 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your email"
+                placeholder="أدخل بريدك الإلكتروني"
                 required
               />
             </div>
@@ -66,7 +75,7 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              كلمة المرور
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -75,7 +84,7 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your password"
+                placeholder="أدخل كلمة المرور"
                 required
               />
               <button
@@ -93,18 +102,18 @@ export default function LoginForm({ onToggleMode }: LoginFormProps) {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            Don't have an account?{' '}
+            ليس لديك حساب؟{' '}
             <button
               onClick={onToggleMode}
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
-              Sign up
+              إنشاء حساب
             </button>
           </p>
         </div>

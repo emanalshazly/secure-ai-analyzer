@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
+import { getUserFromToken } from '@/lib/auth'
+import { prisma } from '@/lib/db'
 import { PRICING_PLANS } from '@/lib/stripe/config'
 import OpenAI from 'openai'
 
@@ -9,41 +11,48 @@ const openai = new OpenAI({
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const { systemDescription, analysisType, includeRecommendations, userId } = body
+    const cookieStore = cookies()
+    const token = cookieStore.get('auth-token')?.value
 
-    if (!userId) {
+    if (!token) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
     }
 
-    const supabase = createServerClient()
+    const user = await getUserFromToken(token)
+    if (!user) {
+      return NextResponse.json({ error: 'Invalid authentication' }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const { systemDescription, analysisType, includeRecommendations } = body
 
     // Get user profile
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    const profile = await prisma.user.findUnique({
+      where: { id: user.id }
+    })
 
     if (!profile) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     // Check usage limits
-    const planData = PRICING_PLANS[profile.subscription_tier || 'free']
+    const planData = PRICING_PLANS[profile.subscriptionTier as keyof typeof PRICING_PLANS] || PRICING_PLANS.free
     
     if (planData.analyses_per_month !== -1) {
       const startOfMonth = new Date()
       startOfMonth.setDate(1)
       startOfMonth.setHours(0, 0, 0, 0)
 
-      const { count } = await supabase
-        .from('security_analyses')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId)
-        .gte('created_at', startOfMonth.toISOString())
+      const count = await prisma.securityAnalysis.count({
+        where: {
+          userId: user.id,
+          createdAt: {
+            gte: startOfMonth
+          }
+        }
+      })
 
-      if (count && count >= planData.analyses_per_month) {
+      if (count >= planData.analyses_per_month) {
         return NextResponse.json(
           { error: 'Monthly analysis limit reached. Please upgrade your plan.' },
           { status: 429 }
@@ -125,32 +134,26 @@ Format your response as a JSON object with the following structure:
     }
 
     // Save analysis to database
-    const { data: savedAnalysis, error: saveError } = await supabase
-      .from('security_analyses')
-      .insert({
-        user_id: userId,
-        system_description: systemDescription,
-        analysis_type: analysisType,
-        result: result
-      })
-      .select()
-      .single()
-
-    if (saveError) {
-      console.error('Error saving analysis:', saveError)
-    }
+    const savedAnalysis = await prisma.securityAnalysis.create({
+      data: {
+        userId: user.id,
+        systemDescription,
+        analysisType,
+        result: JSON.stringify(result)
+      }
+    })
 
     // Track usage
-    await supabase
-      .from('usage_tracking')
-      .insert({
-        user_id: userId,
+    await prisma.usageTracking.create({
+      data: {
+        userId: user.id,
         action: 'security_analysis',
-        metadata: {
+        metadata: JSON.stringify({
           analysis_type: analysisType,
-          analysis_id: savedAnalysis?.id
-        }
-      })
+          analysis_id: savedAnalysis.id
+        })
+      }
+    })
 
     return NextResponse.json(result)
   } catch (error) {
